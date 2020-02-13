@@ -28,14 +28,14 @@ function isrun(cs::Vector{Card})
     if !flag
         has_king = false
         for c in cs
-            if rank(c) == 'K'
+            if rank(c) == K
                 has_king = true
             end
         end
 
         # `cs` is always sorted, so the low-Ace will be at index 1
-        if has_king && rank(cs[1]) == 'A'
-            push!(cs, Card('A', suit(cs[1]), ace_high=true))
+        if has_king && rank(cs[1]) == A
+            push!(cs, ace_high(cs[1]))
             deleteat!(cs, 1)
             # Recursively call `isrun` until all low-Aces have been converted to high-Aces
             return isrun(cs)
@@ -83,7 +83,7 @@ function score_jack(s::Show)
     #     return 2
     # end
     for c in hand(s)
-        if rank(c) == 'J' && suit(c) == x
+        if rank(c) == J && suit(c) == x
             return 1
         end
     end
