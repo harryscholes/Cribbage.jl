@@ -63,7 +63,7 @@ Hand([5♣, 5♢, 5♠, J♡], 5♡)
 julia> score(best_hand)
 29
 
-julia> second_best_hand = score(Show([5♣, 5♢, 5♠, 5♡], J♡))
+julia> second_best_hand = score(Hand([5♣, 5♢, 5♠, 5♡], J♡))
 28
 
 julia> Cribbage.isrun([A♠, 2♡, 3♢])
