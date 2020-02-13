@@ -1,12 +1,12 @@
 isfifteen(cs::Vector{Card}) = sum(value, cs) == 15
 
-score_fifteens(s::Show) = sum(map(n->count(isfifteen, combinations(cards(s), n)) * 2, 2:5))
+score_fifteens(s::Hand) = sum(map(n->count(isfifteen, combinations(cards(s), n)) * 2, 2:5))
 
 ispair(x::Card, y::Card) = rank(x) == rank(y)
 
-score_pairs(s::Show) = count(xy->ispair(xy...), combinations(cards(s), 2)) * 2
+score_pairs(s::Hand) = count(xy->ispair(xy...), combinations(cards(s), 2)) * 2
 
-function score_flush(s::Show)
+function score_flush(s::Hand)
     if length(unique!(suit.(cards(s)))) == 1
         return 5
     elseif length(unique!(suit.(hand(s)))) == 1
@@ -16,6 +16,7 @@ function score_flush(s::Show)
 end
 
 function isrun(cs::Vector{Card})
+    sort!(cs)
     flag = true
     for i in 1:length(cs) - 1
         if mask(cs[i+1]) - mask(cs[i]) != 1
@@ -44,7 +45,7 @@ function isrun(cs::Vector{Card})
     return flag
 end
 
-function score_runs(s::Show)
+function score_runs(s::Hand)
     # Sort the cards by `mask` value because `combinations` always maintains the order of
     # elements in the iterable
     cs = sort!(cards(s))
@@ -76,7 +77,7 @@ function score_runs(s::Show)
     return t
 end
 
-function score_jack(s::Show)
+function score_jack(s::Hand)
     x = suit(cut(s))
     # 'One for his head and one for his heels' is not scored as part of the hand
     # if rank(cut(s)) == 'J'
@@ -90,7 +91,7 @@ function score_jack(s::Show)
     return 0
 end
 
-function score(s::Show)
+function score(s::Hand)
     t = 0
     t += score_fifteens(s)
     t += score_pairs(s)
@@ -102,7 +103,7 @@ end
 
 function all_hands(f::Function)
     return vec(map(Iterators.product(combinations(DECK, 5), 1:5)) do (cs, i)
-        s = Show(cs[Not(i)], cs[i])
+        s = Hand(cs[Not(i)], cs[i])
         f(s)
     end)
 end

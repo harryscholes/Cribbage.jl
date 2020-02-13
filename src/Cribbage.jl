@@ -22,7 +22,6 @@ export
     DECK,
     Hand,
     hand,
-    Show,
     cut,
     cards,
     score,
