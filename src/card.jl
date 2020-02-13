@@ -22,6 +22,9 @@ rank(x::Rank) = x.rank
 value(x::Rank) = x.value
 mask(x::Rank) = x.mask
 
+Base.string(x::Rank) = string(rank(x))
+Base.show(io::IO, x::Rank) = print(io, string(x))
+
 ace_high(x::Rank) = Rank(rank(x), ace_high=true)
 
 struct Suit
@@ -32,6 +35,10 @@ struct Suit
         new(suit)
     end
 end
+
+suit(x::Suit) = x.suit
+Base.string(x::Suit) = string(suit(x))
+Base.show(io::IO, x::Suit) = print(io, string(x))
 
 struct Card
     rank::Rank
@@ -56,12 +63,10 @@ ace_high(x::Card) = Card(ace_high(rank(x)), suit(x))
 
 Base.isless(x::Card, y::Card) = mask(x) < mask(y)
 
-Base.string(x::Card) = rank(x)*suit(x)
+Base.string(x::Card) = string(rank(x))*string(suit(x))
 Base.show(io::IO, x::Card) = print(io, string(x))
 
 # Methods to create `Card` instances by juxtaposing `Rank` and `Suit`, or `Int` and `Suit`
-
-Base.:*(r::Rank, s::Suit) = Card(r, s)
 
 function Base.:*(n::Int, s::Suit)
     2 ≤ n ≤ 9 || error("")
@@ -88,7 +93,7 @@ end
 # K♡, K♠, K♢, K♣,
 for s in SUITS, r in ['A', 'T', 'J', 'Q', 'K']
     name = Symbol("$(r)$(s)")
-    @eval const $name = Rank($r)*Suit($s)
+    @eval const $name = Card(Rank($r), Suit($s))
 end
 
 function deck()
