@@ -1,13 +1,10 @@
 struct _Hand
-    hand::Vector{Card}
-    function _Hand(cs::Vector{Card})
-        length(cs) == 4 || throw(ArgumentError("`Hand` must be of length 4"))
-        new(cs)
-    end
+    hand::NTuple{4,Card}
 end
 
+_Hand(cs::Vector{Card}) = _Hand((cs...,))
 _Hand(cs::Vector{<:AbstractString}) = _Hand(Card.(cs))
-_Hand(cs::Card...) = _Hand([cs...])
+_Hand(cs::Card...) = _Hand((cs...,))
 
 hand(h::_Hand) = h.hand
 

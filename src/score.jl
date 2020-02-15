@@ -7,9 +7,9 @@ ispair(x::Card, y::Card) = rank(x) == rank(y)
 score_pairs(s::Hand) = count(xy->ispair(xy...), combinations(cards(s), 2)) * 2
 
 function score_flush(s::Hand)
-    if length(unique!(suit.(cards(s)))) == 1
+    if length(unique(suit.(cards(s)))) == 1
         return 5
-    elseif length(unique!(suit.(hand(s)))) == 1
+    elseif length(unique(suit.(hand(s)))) == 1
         return 4
     end
     return 0
