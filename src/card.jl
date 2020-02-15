@@ -1,6 +1,9 @@
 const SUITS = ['♣', '♢', '♠', '♡']
 const RANKS = ['A', Char.(50:57)..., 'T', 'J', 'Q', 'K']
 
+const RANK_MASK = Dict(c => i for (i, c) in enumerate(RANKS))
+const RANK_VALUE = Dict(c => i > 10 ? 10 : i for (i, c) in enumerate(RANKS))
+
 struct Rank
     rank::Char
     value::Int64
@@ -8,13 +11,13 @@ struct Rank
 
     function Rank(rank::Char; ace_high::Bool=false)
         rank in RANKS || throw(ArgumentError("Incorrect rank: $rank"))
-        idx = findfirst(x->x == rank, RANKS)
-        value = idx > 10 ? 10 : idx
+        value = RANK_VALUE[rank]
+        mask = RANK_MASK[rank]
         if ace_high
             rank == 'A' || throw(ArgumentError("Incorrect rank: $(rank(x))"))
-            idx = 14
+            mask = 14
         end
-        new(rank, value, idx)
+        new(rank, value, mask)
     end
 end
 
